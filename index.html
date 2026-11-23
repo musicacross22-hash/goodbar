@@ -1,0 +1,641 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Carta Goodbar</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Poppins:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: black stage like the Goodbar menu; cover shows the outlined headline + Instagram-style info card; two big buttons (gold / white); inside, sticky chips + price rows with drink thumbnails. */
+:root {
+  --bg: #0a0a0a;
+  --surface: #161616;
+  --line: #2c2c2c;
+  --fg: #ffffff;
+  --muted: #b9b3a6;
+  --gold: #f4a81d;
+  --card: #ffffff;
+  --card-fg: #111111;
+  --accent: var(--gold);
+  --display: "Archivo Black", "Arial Black", Impact, system-ui, sans-serif;
+  --body: "Poppins", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.5;
+  min-height: 100vh;
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto;
+  height: env(safe-area-inset-top, 0px);
+  background: var(--bg);
+  z-index: 30;
+}
+.wrap {
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+h1, h2, h3, p { margin: 0; }
+h1, h2, h3 { text-wrap: balance; }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+.out { color: transparent; -webkit-text-stroke: 1.6px var(--fg); }
+@supports not (-webkit-text-stroke: 1px #fff) { .out { color: var(--fg); } }
+
+/* ---------- Home ---------- */
+.home { position: relative; overflow: hidden; padding-block: 36px 56px; }
+.sun {
+  position: absolute;
+  left: 50%;
+  top: 170px;
+  width: 960px;
+  max-width: none;
+  height: 960px;
+  margin-left: -480px;
+  margin-top: -480px;
+  opacity: 0.07;
+  pointer-events: none;
+  animation: spin 180s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.hero { position: relative; display: flex; flex-direction: column; align-items: center; gap: 18px; text-align: center; padding-bottom: 28px; }
+.logo { width: 120px; height: 120px; display: block; }
+.cover { font-family: var(--display); text-transform: uppercase; font-weight: 400; line-height: 0.98; font-size: clamp(2.5rem, 13vw, 4.2rem); letter-spacing: -0.01em; display: flex; flex-direction: column; }
+.info { background: var(--card); color: var(--card-fg); border-radius: 18px; padding: 16px 18px; text-align: left; width: 100%; max-width: 420px; display: flex; flex-direction: column; gap: 10px; }
+.info .who { display: flex; align-items: center; gap: 12px; }
+.info .who svg { width: 40px; height: 40px; flex: 0 0 auto; }
+.info .who b { display: block; line-height: 1.2; }
+.info .who a { color: #555; font-size: 0.9rem; text-decoration: none; }
+.info .row { font-size: 0.88rem; line-height: 1.4; color: #222; }
+.info .row small { display: block; color: #555; font-size: inherit; }
+.choices { position: relative; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.choice {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 28px;
+  min-height: 220px;
+  padding: 22px 20px;
+  border-radius: 14px;
+  text-decoration: none;
+  color: #0a0a0a;
+  transition: transform 0.15s ease;
+}
+.choice:hover { transform: translateY(-3px); }
+.choice.comida { background: var(--gold); }
+.choice.bebestibles { background: #ffffff; }
+.choice b { font-family: var(--display); font-weight: 400; text-transform: uppercase; font-size: clamp(1.3rem, 5.4vw, 1.8rem); line-height: 1.05; overflow-wrap: anywhere; }
+.choice span { font-size: 0.92rem; font-weight: 500; line-height: 1.35; }
+.choice i { font-style: normal; font-family: var(--display); font-size: 1.5rem; }
+.foot { position: relative; margin-top: 32px; text-align: center; color: var(--muted); font-size: 0.85rem; }
+
+/* ---------- Menu views ---------- */
+.bar {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 20;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+}
+.bar-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-block: 12px 8px; }
+.back { display: inline-flex; align-items: center; gap: 6px; text-decoration: none; color: var(--muted); font-weight: 600; font-size: 0.9rem; padding: 6px 0; }
+.back:hover { color: var(--fg); }
+.view-title { font-family: var(--display); text-transform: uppercase; font-size: 1rem; color: var(--accent); }
+.chips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 12px; scrollbar-width: none; }
+.chips::-webkit-scrollbar { display: none; }
+.chip {
+  flex: 0 0 auto;
+  border: 1.5px solid var(--line);
+  background: transparent;
+  color: var(--fg);
+  font: 600 0.88rem var(--body);
+  padding: 8px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+.chip:hover { border-color: var(--accent); }
+.chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #0a0a0a; }
+
+.menu { padding-block: 28px 64px; display: flex; flex-direction: column; gap: 48px; }
+.cat { display: flex; flex-direction: column; gap: 22px; scroll-margin-top: 130px; }
+.cat > h2 { font-family: var(--display); font-weight: 400; text-transform: uppercase; font-size: clamp(1.7rem, 8vw, 2.4rem); line-height: 1; letter-spacing: 0.01em; padding-bottom: 12px; border-bottom: 3px solid var(--accent); overflow-wrap: anywhere; }
+.cat-note { color: var(--muted); font-size: 0.9rem; margin-top: -12px; }
+.group { display: flex; flex-direction: column; }
+.group > h3 { font-family: var(--display); font-weight: 400; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); }
+.group > .gnote { color: var(--muted); font-size: 0.86rem; margin-top: 2px; }
+.items { margin-top: 6px; }
+.item { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 16px; padding: 12px 0; border-bottom: 1px dashed var(--line); }
+.item:last-child { border-bottom: 0; }
+.name { font-weight: 700; overflow-wrap: anywhere; }
+.price { font-family: var(--display); font-size: 0.95rem; color: var(--accent); font-variant-numeric: tabular-nums; white-space: nowrap; grid-column: 2; grid-row: 1; align-self: start; }
+.desc { grid-column: 1; color: var(--muted); font-size: 0.88rem; line-height: 1.45; }
+.item.has-thumb { grid-template-columns: 54px minmax(0, 1fr) auto; align-items: center; gap: 2px 14px; }
+.item.has-thumb .price { grid-column: auto; grid-row: auto; align-self: center; }
+.price.na { font-family: var(--body); font-weight: 500; font-size: 0.8rem; color: var(--muted); }
+.thumb { width: 54px; height: 54px; background: var(--surface); border-radius: 12px; padding: 5px; display: block; }
+.info-col { display: flex; flex-direction: column; min-width: 0; }
+.mfoot { padding-block: 0 48px; color: var(--muted); font-size: 0.85rem; text-align: center; }
+
+@media (max-width: 520px) {
+  .choices { grid-template-columns: 1fr; }
+  .choice { min-height: 170px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sun { animation: none; }
+  .choice { transition: none; }
+}
+</style>
+
+<div id="app"></div>
+
+<script>
+(function () {
+  var money = function (n) { return "$" + String(n).replace(/\B(?=(\d{3})+(?!\d))/g, "."); };
+  var I = function (n, d, p, i) { return { n: n, d: d || "", p: p, i: i }; };
+
+  /* colores de cerveza */
+  var DK = "#3a1f12", RB = "#9c3a1a", AM = "#c9731c", GD = "#e3b341", PL = "#f0d56a", RD = "#a8321c", FR = "#e0903a", MQ = "#6b2a6e";
+  var B = function (c) { return "bottle:" + c; };
+
+  var DATA = {
+    comida: {
+      title: "Comida",
+      cats: [
+        { id: "apetizzer", title: "Apetizzer", groups: [
+          { items: [
+            I("Tablita de camarones", "10 camarones con panko y 250 gr de papas fritas con 1 mayonesa y 1 pebre.", 13500),
+            I("Salteado de pollo", "400 gr de papas horneadas, 350 gr de pollo, 50 gr de pimentón verde y rojo, 80 gr de tomate, 80 gr de champiñón, 80 gr de cebolla morada.", 17900),
+            I("Burrito", "80 gr de cerdo marinado, 60 gr de queso, 40 gr de lechuga, 50 gr de porotos negros, 30 gr de pebre más porción de 100 gr de papas horneadas.", 9500),
+            I("Burrito de atún", "Lechuga, tomate en cubo, aceituna negra, cebolla morada y pepino en rodajas.", 9500),
+            I("Quesadilla individual", "2 tortillas con cerdo salteado, pimentón rojo y verde, champiñón, poroto verde, choclo y queso.", 12500),
+            I("Quesadilla camarón pollo", "4 tortillas de camarón y 4 de pollo rellenas con choclillo, palmito, morrón rojo y verde, cebolla caramelizada y queso, más salsa verde, mayonesa y pebre.", 18990),
+            I("Tabla de quesadillas", "6 quesadillas, 160 gr de queso mantecoso, 50 gr de pollo, 20 gr de cebolla caramelizada, 20 gr de choclo, 30 gr de palmito y 100 gr de papas fritas.", 15990),
+            I("Quesadilla vegetariana", "6 quesadillas, 160 gr de queso mantecoso, 50 gr de champiñón, 20 gr de cebolla caramelizada, 20 gr de choclo, 30 gr de palmito y 100 gr de papas horneadas.", 15990),
+            I("Chorillana 3 carnes", "400 gr de papas horneadas, 50 gr de cebolla caramelizada, 200 gr de carne de res, 200 gr de pollo, 180 gr de longaniza y 2 huevos horneados.", 18900),
+            I("Tacos jalapeño", "Carne molida 30 gr, lechuga 20 gr, pebre 20 gr, queso 20 gr, más 150 gr de papas horneadas.", 15990),
+            I("Tacos mechada", "Carne mechada 30 gr, lechuga 20 gr, pebre 20 gr, queso 20 gr, más 150 gr de papas horneadas.", 15990),
+            I("Tacos pollo", "Pollo 30 gr, lechuga 20 gr, pebre 20 gr, queso 20 gr, más 150 gr de papas horneadas.", 15990),
+            I("Alitas Good", "10 alitas de pollo horneadas y bañadas en salsa bbq, 2 salsas de la casa. 400 gr de papas horneadas rociadas con salsa cheddar.", 18990)
+          ]}
+        ]},
+        { id: "hamburguesas", title: "Hamburguesas", groups: [
+          { items: [
+            I("Super Campanil", "250 gr de carne 100% vacuno desgrasada, tocino, salame, pepinillo, cebolla caramelizada, queso, lechuga y tomate. Envuelta en tortilla con huevo frito encima o en pan de hamburguesa, con salsa de la casa.", 13990),
+            I("American Good", "Pan, queso cheddar, tocino, aros de cebolla, lechuga y salsa bbq.", 13990),
+            I("Mechada", "200 gr de carne mechada, tomate, queso, choclo, cebolla morada y mayo, más 100 gr de papas horneadas.", 11500),
+            I("Mechada italiana", "Mechada, tomate, palta y mayo, más papas horneadas.", 11500),
+            I("Churrasco carne", "Churrasco laminado 170 gr, queso, cebolla caramelizada, huevo, chimichurri y pepinillo, más papas horneadas.", 11500),
+            I("Churrasco pollo", "250 gr de pechuga de pollo, tomate, lechuga, palta y mayo, más papas horneadas.", 11500),
+            I("Mechada de cerdo", "Mechada de cerdo 250 gr, ensalada de repollo y zanahoria, mayonesa casera y papas horneadas.", 11500),
+            I("Not Burger", "2 hamburguesas de 95 gr cada una, cheddar, pepinillos, tomate, salsa Big, champiñón y cebolla caramelizada, más papas fritas.", 11500)
+          ]}
+        ]},
+        { id: "papas", title: "Papas horneadas", note: "Horneadas sin aceite. Las porciones grandes son para dos personas.", groups: [
+          { items: [
+            I("Papas salsa camarón", "Papas horneadas, porción para dos personas, bañadas en salsa de camarones.", 14500),
+            I("Cheddar ciboulette", "Papas horneadas con salsa de queso cheddar fundido y ciboulette, porción para dos personas.", 14500),
+            I("Pollo y tocino", "Papas fritas horneadas sin aceite con salsa de pollo (100 gr) y tocino.", 14500),
+            I("Crema con palmitos", "Papas horneadas bañadas en salsa con trozos de palmito y un toque de morrón. Entre 14:00 y 23:00 h: $12.500.", 14500),
+            I("Papas vegetariana", "500 gr de papas horneadas, 270 gr de carne de soya, 2 huevos horneados, morrón rojo y verde, champiñón y cebolla caramelizada, bañada con salsa cheddar.", 18900),
+            I("Papa pequeña", "Papas horneadas 500 gramos más un pocillo con mayonesa.", 6000)
+          ]}
+        ]},
+        { id: "pizzas", title: "Pizzas de la casa", note: "Todas con masa y salsa casera.", groups: [
+          { items: [
+            I("Española", "Queso, tocino, chorizo, salame, morrón, choclo y palta.", 15500),
+            I("Camarón", "Queso, camarones, palta y tomate cherry.", 15500),
+            I("Tres carnes", "Queso, cerdo, pollo, vacuno, palta y orégano.", 15500),
+            I("Cavernícola", "Queso, pepperoni, pollo, tocino, vacuno y tomate.", 15500),
+            I("Carioca", "Queso, pollo, champiñón, crema, tocino y cilantro.", 15500),
+            I("Atún", "Queso, 208 gr de atún, cebolla morada, aceituna, choclo y cilantro. En oferta a $10.000.", 15500),
+            I("Napolitana", "Queso, jamón acaramelado, tomate y aceitunas laminadas.", 13500),
+            I("Peperoni", "Queso, pepperoni y aceitunas negras.", 13500),
+            I("Fughi", "Champiñón, cebolla caramelizada y queso.", 13500),
+            I("Vegetariana", "Cebolla morada, morrón rojo y verde, choclo, aceituna laminada y queso.", 13500)
+          ]}
+        ]}
+      ]
+    },
+
+    bebestibles: {
+      title: "Bebestibles",
+      cats: [
+        { id: "cervezas", title: "Cervecería", groups: [
+          { name: "Promoción Schop de Luca", note: "De lunes a sábado de 14:00 a 16:30, salvo que un cliente pida un partido. Uno por persona; cuando lo termines puedes pedir otro.", i: "mug:" + GD, items: [ I("Schop de Luca", "", 1000) ] },
+          { name: "Totem", i: "bottle:" + DK, items: [
+            I("Juan Caminante 7.5°", "Rojizo oscuro, madurada en roble tostado con matices a vainilla. Gran cuerpo, sabor y aroma maltoso.", 4500, B(RB)),
+            I("Imperial Stout 7.5°", "Muy oscura y densa, espuma fina color café claro, perfil tostado y a caramelo.", 4500, B(DK))
+          ]},
+          { name: "Crápula", i: "bottle:" + RB, items: [
+            I("Irish Red Ale 5.0°", "Tostada rojiza, IBU 18. Lúpulos Centennial y East Kent.", 4950, B(RD)),
+            I("Barley Wine 13°", "Alto contenido de alcohol, de ámbar a marrón oscuro, sabor intenso y complejo. 34 IBU.", 4950, B(AM)),
+            I("Lujuria 4.6°", "Cream ale rubia de cuerpo medio, aromática y fresca.", 4500, B(PL))
+          ]},
+          { name: "Base de limón", note: "Para tu michelada.", i: "high:#d4452a:salt", items: [ I("1 oz", "", 1000), I("2 oz", "", 1300) ] },
+          { name: "Tübinguer", i: "bottle:" + GD, items: [
+            I("Hoppiness IPA 6°", "Dorada con espuma marfil, aroma intenso a lúpulo con notas a frutas tropicales. Final amargo.", 4950, B(GD)),
+            I("Tübinator 8°", "Strong dark ale con aroma a malta dulce, notas a caramelo y toffee. Sabor tostado y a frutos secos.", 4950, B(DK))
+          ]},
+          { name: "De la casa", i: "bottle:" + AM, items: [
+            I("Lager de la casa 5°", "Suave, elaborada para Good Bar. Refrescante y fantástica como michelada.", 3500, B(GD)),
+            I("Calafate de la casa 5.8°", "Ámbar maltosa con sabor a calafate.", 4500, B(RB)),
+            I("Ira de la casa 5°", "", 3950, B(RD))
+          ]},
+          { name: "Cuello Negro", i: "bottle:" + AM, items: [
+            I("Stout 8°", "Foreign extra stout. Negra de abundante espuma, una de las cervezas más premiadas de Chile.", 6000, B(DK)),
+            I("Ámbar 5.8°", "Golden ale, amargor complejo de maltas tostadas y lúpulo equilibrado. Cremosa y ligera.", 6000, B(AM)),
+            I("IPA 4.7°", "Golden ale, amargor complejo de maltas tostadas y lúpulo equilibrado.", 6000, B(GD))
+          ]},
+          { name: "Bundor", i: "bottle:" + AM, items: [
+            I("Belzeboo 11°", "Recuerdo sutil al chocolate amargo, retrogusto largo y cálido.", 6000, B(DK)),
+            I("Kali 6.5°", "India pale ale ámbar pálido, aroma a cítrico y frutos tropicales. Amargor alto.", 6000, B(GD)),
+            I("Ninfa 6°", "Irish red ale con 20 IBU, color dado por la malta caramelo.", 5500, B(RD)),
+            I("Nessie 8°", "Wee heavy marrón rubí, aroma a toffee, ahumado y algo de chocolate.", 6000, B(RB))
+          ]},
+          { name: "Delirium", i: "bottle:" + PL, items: [
+            I("Delirium Tremens 8°", "Strong pale ale de triple fermentación. Cítrica al comienzo, con notas dulces de banana y melón. Seco amargor.", 8000, B(PL))
+          ]},
+          { name: "Wandersleben (Chillán)", i: "bottle:" + GD, items: [
+            I("Calafate artesanal 4.1°", "Calafate ale de color ámbar y sabor característico.", 4950, B(RB)),
+            I("Miel 4.1°", "Honey ale con miel multifloral del centro sur de Chile.", 4950, B(GD)),
+            I("Ámbar 4.9°", "American amber ale ámbar rojizo, espuma cremosa y balanceada.", 4950, B(AM)),
+            I("Mango maracuyá 4.2°", "Artesanal de color dorado intenso, 23 IBU.", 4950, B(FR))
+          ]},
+          { name: "Indomable", i: "bottle:" + DK, items: [
+            I("Mocha Dick 10°", "Barleywine, riqueza maltosa y sabores intensos. 50 IBU.", 4500, B(DK)),
+            I("Chiflón del Diablo 5.8°", "Ámbar dedicada a los mineros de Lota. Ale centrada en la malta.", 3950, B(AM))
+          ]},
+          { name: "Tradicionales", i: "bottle:" + GD, items: [
+            I("Cristal 4.6°", "Clara y brillante, tipo pilsener.", 4000, B(PL)),
+            I("Escudo 5°", "Cuerpo redondo, dorado brillante, intensamente refrescante.", 3500, B(GD)),
+            I("Heineken 4°", "Cerveza premium de gran tradición.", 4500, B("#2f7a3a")),
+            I("Royal Guard 5°", "Receta de 2 lúpulos: uno para el aroma y otro para el amargor.", 4500, B(GD)),
+            I("Austral Calafate 5°", "Ámbar oscura con aroma intenso a calafate.", 5500, B(RB)),
+            I("Kunstmann Torobayo 5°", "Ámbar brillante, aromas frutales a durazno y notas a caramelo.", 5500, B(AM)),
+            I("Dolbeck de Maqui 4.8°", "Pale ale violeta intenso, sabor agridulce a maqui.", 5500, B(MQ))
+          ]},
+          { name: "Mure", i: "bottle:" + PL, items: [
+            I("La Gringa 4.6°", "Lager dorada de cuerpo ligero y bajo amargor. Muy fría y refrescante.", 3900, B(PL))
+          ]}
+        ]},
+
+        { id: "mojitos", title: "Mojitos", groups: [
+          { i: "high:#d3f1cf:mint", items: [
+            I("Mojito sabores", "Frambuesa, frutilla, mango, maracuyá o piña.", 6500, "high:#ff8aa8:mint"),
+            I("Mojito espumante", "Base de mojito, espumante y pulpa a elección.", 7000, "flute:#f3e6a8"),
+            I("Mojito cubano", "Base de mojito, ron y soda.", 6000),
+            I("Mojito Jager Bull", "Base de mojito, Jägermeister y Red Bull.", 7500, "high:#3a6b3a:mint"),
+            I("Mojito whisky", "Sour mix, menta, hielo, whisky de manzana, miel, durazno o tradicional, Sprite.", 6500, "high:#e3b341:mint"),
+            I("Mojito Ramazzotti", "Sour mix, menta, hielo frappé, licor Ramazzotti, espumante brut y soda fría.", 7000, "high:#b8402a:mint"),
+            I("Mojito tropical gin", "Menta, azúcar, limón, hielo frappé, gin Gordon's y Red Bull tropical.", null, "high:#7fd6e8:mint"),
+            I("Mojito arándano", "Base de mojito con arándanos macerados, vodka de arándano y soda.", 6500, "high:#6b2a6e:mint"),
+            I("Mojito Jack variedad", "Menta, azúcar, limón, Red Bull y hielo frappé, con Jack Daniel's a elección: Fire, Apple, Honey o N°7.", 7500, "high:#e3a64a:mint"),
+            I("Mojito naranja Marie Brizard", "Base de mojito, 4 oz de Marie Brizard Orange 40° y soda.", 6900, "high:#ffa63a:mint"),
+            I("Mojito sandía Marie Brizard", "Base de mojito, 4 oz de Marie Brizard Watermelon 17° y soda.", 6900, "high:#ff6b8a:mint"),
+            I("Mojito siete hierbas", "Base de mojito, Schwartzhog y Red Bull.", 7500),
+            I("Mojito coco Malibú", "Cóctel de terraza con base de mojito, ron coco Malibú y pulpa de piña.", 6500, "high:#f7efc2:mint"),
+            I("Mojito licores sabor", "Limón, menta, azúcar y licor de melón tuna, durazno, frutilla, manzana o limoncello, con vodka de manzana.", 6000, "high:#cfe88a:mint"),
+            I("Frutos del bosque", "Base de mojito, vodka de arándano, hielo frappé y mix de frutos del bosque.", 6500, "high:#a8321c:mint"),
+            I("Mojito beer", "Sour mix, hielo frappé y una exquisita cerveza.", 5500, "high:#e3b341:mint"),
+            I("2 mojitos de manzana", "Base de mojito, vodka de manzana, soda y trozos de manzana. Promoción 2 por $10.000.", 10000, "high:#cfe88a:mint"),
+            I("2 mojitos de chocolate", "Base de mojito, licor de chocolate, ron, Baileys y soda. Promoción 2 por $10.000.", 10000, "high:#6b3a22:mint")
+          ]}
+        ]},
+
+        { id: "cocteles", title: "Coctelería", groups: [
+          { name: "Clásica", i: "coupe:#e8e0a0", items: [
+            I("Pisco sour", "Pisco chileno de 35° con jugo, azúcar y albúmina, bien frío.", 4500, "coupe:#e8e0a0"),
+            I("Mango sour", "Pisco chileno con pulpa de mango emulsionado con azúcar y albúmina.", 4500, "coupe:#ffb830"),
+            I("Whisky sour", "Whisky, albúmina, limón y azúcar flor.", 5500, "coupe:#e3a64a"),
+            I("Cosmopolitan", "Stolichnaya arándano, jugo de limón y pulpa de arándano.", 5500, "coupe:#ff4d6d"),
+            I("Tequila margarita", "Tequila mexicano con limón natural, batido y endulzado, corona de sal y triple sec.", 6000, "coupe:#cde58a:salt"),
+            I("Tequila margarita sabores", "Tequila, triple sec, pulpa a elección y limón.", 6500, "coupe:#ff5e7e:salt"),
+            I("Blue margarita", "Tequila blanco con limón natural, corona de sal y blue curaçao.", 5500, "coupe:#2aa8ff:salt"),
+            I("Ramazzotti spritz", "Licor de flores de hibisco y azahar de limón, espumante brut, lámina de limón y hielo.", 6500, "wine:#b8402a"),
+            I("Aperol spritz", "Aperitivo de hierbas aromáticas con espumante brut, lámina de naranja y hielo.", 6000, "wine:#ff8a3d"),
+            I("James Bond", "Vodka, gin, aceituna, hielo y vermut seco.", 5000, "coupe:#e9efe0"),
+            I("Manhattan", "Whisky, angostura, Martini rosso y marrasquino.", 4000, "coupe:#a8321c"),
+            I("Martini dry", "Ginebra y vermut blanco, hielo picado con 2 aceitunas verdes.", 4000, "coupe:#e9efe0"),
+            I("Old fashion original", "Whisky blended scotch, angostura, hielo en cubos, marrasquino, lámina de naranja y sirope de azúcar rubia.", 5500, "rocks:#c8801f"),
+            I("Piña colada", "Ron blanco, crema de coco, pulpa de piña, crema de leche y hielo. Decorada con salsa de chocolate.", 6000, "hurricane:#f7efc2"),
+            I("Piña colada sabores", "", 6500, "hurricane:#ffb0c8"),
+            I("Caipiroska", "Vodka, jugo de lima y azúcar.", 4000, "rocks:#cfe88a"),
+            I("Caipiriña", "Cachaça, limón sutil, azúcar flor y hielo.", 4500, "rocks:#cfe88a"),
+            I("Caipiriña sabores", "Cachaça, limón sutil, azúcar flor, pulpa a elección y hielo.", 5500, "rocks:#ff8aa8"),
+            I("Tom Collins", "Gin, jugo de limón, azúcar flor y soda.", 5500, "high:#f3e58a:lime"),
+            I("John Collins", "Whisky, limón, azúcar flor y soda.", 5500, "high:#f3e58a:lime"),
+            I("Orgasmo", "Baileys, licor de café y amaretto con marrasquino.", 6500, "rocks:#c9a27a"),
+            I("Laguna azul", "Curaçao azul, limón y vodka.", 5500, "high:#2aa8ff:straw"),
+            I("Daiquiri", "Hielo, limón, pulpa a elección y ron blanco.", 5500, "hurricane:#ff6b8a")
+          ]},
+          { name: "De la casa", i: "rocks:#c8801f", items: [
+            I("Spritz de la casa", "Chambord, licor orgánico de frambuesa premium francés, con champaña y frutos rojos.", 8900, "wine:#b8402a"),
+            I("Clavo oxidado con Jack's", "Jack Daniel's N°7 con clavos de olor y Drambuie.", 7500, "rocks:#b46a1a"),
+            I("Clavo oxidado", "Whisky escocés con clavos de olor y Drambuie.", 6000, "rocks:#c8801f"),
+            I("Jarra de borgoña", "Vino tinto, frutillas, canela y almíbar de fruta.", 11500, "high:#8a1f3a:straw"),
+            I("Copa de borgoña", "Borgoña en copa de vino tinto, frutillas, canela y almíbar de fruta.", 3500, "wine:#8a1f3a"),
+            I("Negroni", "Base de gin, Campari y vermut rojo.", 6000, "rocks:#c0392b"),
+            I("Banana split", "Nuestra versión del postre: licor de banana, helado, crema, hielo y chantilly de banana. Decorado con marrasquino y salsa de chocolate.", null, "hurricane:#f3e58a"),
+            I("Terremoto", "Medio litro de pipeño, helado de piña y granadina.", 5000, "high:#f7efc2:straw"),
+            I("Apple tini", "Licor de manzana, limón, gin y goma.", 5900, "coupe:#cfe88a"),
+            I("Blue Good", "Pulpa de piña, 90 ml de gin, 60 ml de curaçao y cerveza IPA Tübinguer.", 6900, "hurricane:#2aa8ff"),
+            I("Ruso negro", "Vodka, hielo y licor de café.", 6000, "rocks:#3a2418"),
+            I("Ruso blanco", "Vodka, crema de leche azucarada y licor de café con hielo en cubos.", 6500, "rocks:#efe3cf"),
+            I("Merengue Baileys", "Amaretto, licor de café, licor de chocolate, cacao, Baileys, chantilly y marrasquino.", 7500, "rocks:#c9a27a"),
+            I("Tequila maravilla", "Cóctel de autor: frozen de tequila margarita y licor de granadina.", 5500, "hurricane:#ff5e7e"),
+            I("Moscow mule", "Base de 3 oz de Smirnoff y 2 oz de limón, con cerveza de jengibre.", 6500, "high:#e9d9a0:lime"),
+            I("Marley Tini", "Café expreso, licor de café, vodka y azúcar.", 6000, "coupe:#3a2418"),
+            I("Good Rose", "Granadina, gin rosé, espumante y soda.", 7500, "flute:#ffb0c8"),
+            I("Melon Good", "Licor de melón, gin, goma, soda y albúmina.", 5900, "coupe:#cfe88a"),
+            I("Blush", "Ramazzotti violeto, licor de durazno, jugo de naranja, arándanos y soda.", 6500, "high:#a86ac8:straw"),
+            I("Summer Good", "Campari, granadina, jugo de naranja y cerveza calafate de la casa.", 6900, "high:#ff7a1a:straw")
+          ]}
+        ]},
+
+        { id: "whisky", title: "Whisky", groups: [
+          { name: "Bourbon y Tennessee whiskey", note: "Se sirven con bebida lata 220 cc, salvo los que indican otra forma.", i: "rocks:#b46a1a", items: [
+            I("Jack Daniel's N°7", "Tennessee whiskey 40°.", 6900),
+            I("Jack Fire", "35°, sabor canela y pimienta.", 6900, "rocks:#b3341c"),
+            I("Jack Honey", "Tennessee honey 35°.", 6900, "rocks:#e3b341"),
+            I("Jack Apple", "Sabor manzana verde 35°.", 6900, "rocks:#cfe88a"),
+            I("Gentleman", "Considerado uno de los whiskies americanos más finos, por su doble suavización con carbón de arce.", 9500),
+            I("Single Barrel Jack D", "Embotellado a 94 grados. Notas de caramelo y especias, con frutas brillantes y aromas dulces.", 12500),
+            I("Charred Ole Smoky", "51.5°, artesanal y audaz, con notas de caramelo, vainilla y tostado único.", 7900, "rocks:#8a4a14"),
+            I("White Lightnin' Ole Smoky", "50°, moonshine original.", 7900, "rocks:#efe9d8"),
+            I("Sandía Ole Smoky", "30°, whiskey con sandía y un poco de sal.", 7900, "rocks:#ff6b8a"),
+            I("Mango habanero Ole Smoky", "Mezcla dulce y picante de mango y habanero.", 7900, "rocks:#ffa63a"),
+            I("Canela pimienta Ole Smoky", "40°, con un toque de fuego.", 7900, "rocks:#b3341c"),
+            I("Salty caramel Ole Smoky", "Whisky y caramelo líquido con un toque final de sal.", 6500, "rocks:#c9801f"),
+            I("Blackberry Ole Smoky", "20°, moonshine de zarzamora silvestre.", 6500, "rocks:#4a2a6e"),
+            I("Butter pecan Ole Smoky", "Mantequilla, crema, nueces tostadas y caramelo.", 6500, "rocks:#c9a27a"),
+            I("Tablita Ole Smoky", "5 shots a elección de Ole Smoky.", 20000, "shot:#c8801f")
+          ]},
+          { name: "Blended Scotch", note: "Con bebida o soda.", i: "rocks:#c8801f", items: [
+            I("Ballantine's", "Blended scotch whisky 40°.", 5500),
+            I("Ballantine's Hard Fired", "Toque de vainilla, ahumado y especias. 40°.", 6000),
+            I("Red Label", "Johnnie Walker. Solo, con hielo o con tu mezclador favorito.", 5500, "rocks:#b3341c"),
+            I("Black Label 12 años", "Johnnie Walker. Notas de fruta blanca. 2 por $14.000.", 8000, "rocks:#2a1a12"),
+            I("Gold Label Reserve", "Johnnie Walker Gold Label Reserve.", 11500, "rocks:#e3b341"),
+            I("Chivas 12 años", "Chivas Regal blended scotch, 3 onzas.", 8500),
+            I("Chivas 18 años", "Gold Signature blended scotch 40°.", 13000),
+            I("Vat 69", "Sabor dulce y redondeado, final suave y frutal.", 5000),
+            I("Buchanan's Deluxe 12", "Sutil aroma ahumado turboso, suave paladar. Mezcla de 40 whiskys.", 9500),
+            I("Grand Old Parr 12", "Aroma fresco a hojas verdes, flores y roble. Final largo y suave.", 8900),
+            I("Shanky's Whip a las rocas", "Suave, con notas de vainilla y caramelo.", 9500, "rocks:#efe3cf")
+          ]}
+        ]},
+
+        { id: "destilados", title: "Destilados", groups: [
+          { name: "Piscos chilenos", note: "Se sirven con bebida lata 220 cc.", i: "rocks:#dfe9ee", items: [
+            I("Pisco Tres Erres 35°", "3 oz.", 4500),
+            I("Pisco Tres Erres 20°", "3 oz.", 4000),
+            I("Mal Paso 35° especial", "Delicado aroma frutal y floral.", 4400),
+            I("Alto del Carmen 35°", "", 5000),
+            I("Mistral 35°", "3 oz.", 5000),
+            I("Mistral 40°", "Añejado en roble, con hielo.", 5400),
+            I("Pisco Alto Envejecido", "", 5400),
+            I("Horcón Quemado 1 año", "35°, destilado artesanal de uva moscatel del valle de San Félix.", 6000),
+            I("Alto del Carmen 40°", "Uvas de los valles de Huasco, Elqui y Limarí, bidestiladas en alambiques de cobre.", 6400),
+            I("Mistral Nobel 40°", "Extra añejado en barricas de roble americano.", 6400),
+            I("A.D.C. Robles del Sur", "100% uva moscatel envejecido en roble americano.", 6500),
+            I("Nobel Barrica Tostada", "Inspirado en destilados de excelencia mundial, añejado en roble.", 7400),
+            I("Mistral Gran Nobel", "Selección de los piscos más finos y antiguos de la reserva privada de Mistral. 40°.", 8400)
+          ]},
+          { name: "Vodka", note: "Con bebida lata 220 cc.", i: "rocks:#dfe9ee", items: [
+            I("Smirnoff", "Original o sabores, pregunta por la variedad disponible.", 4000),
+            I("Eristoff Black", "Vodka negro con licor de frutos del bosque.", 4000, "rocks:#3a2418"),
+            I("Absolut sabores", "40°, consulta los sabores disponibles.", 5000),
+            I("Stolichnaya", "Originario de Rusia, 40°, servido con hielo.", 5000),
+            I("Stolichnaya sabores", "Normal, razberi, ohranj, blueberi, chocolat kokonut.", 5500)
+          ]},
+          { name: "Gin", i: "rocks:#d8eef2", items: [
+            I("Zest", "Selección de botánicos, algunos propios del sur de Chile.", 5500),
+            I("Beefeater sabores", "London dry. Orange, pink y blackberry.", 5900),
+            I("Tanqueray", "Ginebra británica, más lata de bebida 220 cc.", 6500),
+            I("Bombay Bramble", "Destilada en Inglaterra con bayas de enebro y frutos rojos frescos.", 6800, "rocks:#a8321c"),
+            I("Tropical gin", "3 onzas de gin Boolton, Red Bull Yellow y 6 hielos.", 6900, "high:#7fd6e8:straw"),
+            I("Bulldog", "Sabor a flores, fruta y cítricos.", 7000),
+            I("Hendrick's Lunar", "Especias suaves, sutiles notas florales y final cítrico.", 7500),
+            I("The London Original Blue Gin", "47°, con Britvic Tonic o Britvic Ginger Ale.", 8000, "rocks:#2aa8ff")
+          ]},
+          { name: "Ron", note: "Con bebida 220 cc.", i: "rocks:#b46a1a", items: [
+            I("Bacardí sabores", "Ron blanco de sabores 35°.", 3500, "rocks:#efe9d8"),
+            I("Pampero especial", "40°.", 4000),
+            I("Havana añejo especial", "Doblemente envejecido en barricas de roble blanco jóvenes.", 4000),
+            I("Ron Malibú", "Ron de coco originario del Caribe 24°.", 4000, "rocks:#efe9d8"),
+            I("Havana añejo reserva", "Combinación de sabor fuerte y aroma suave.", 4500),
+            I("Havana 7 años", "Para saborear con hielo y para cócteles.", 6000),
+            I("Pampero aniversario", "Ron añejo fuera de serie.", 6500),
+            I("Havana selección de maestros", "Creación ahumada, especiada y suave.", 7500)
+          ]},
+          { name: "Tequila", i: "shot:#e8c36a", items: [
+            I("Jose Cuervo reposado", "", 3000),
+            I("Jose Cuervo transparente", "", 3000, "shot:#efe9d8"),
+            I("Olmeca chocolate", "", 3500, "shot:#6b3a22"),
+            I("Tequila blanco Don Julio", "", 8500, "shot:#efe9d8")
+          ]},
+          { name: "Aguardiente Colombia", i: "shot:#efe9d8", items: [
+            I("Antioqueño", "", 1990),
+            I("Amarillo", "", 2500)
+          ]},
+          { name: "Licores", i: "shot:#2f1f14", note: "Con bebida lata 220 cc.", items: [
+            I("Fernet Branca", "Licor de hierbas a base de botánicos.", 4000),
+            I("Jägermeister", "Selección de 56 hierbas naturales maceradas, 35°.", 5500)
+          ]}
+        ]},
+
+        { id: "sinalcohol", title: "Sin alcohol", groups: [
+          { name: "Mocktail", i: "high:#d3f1cf:mint", items: [
+            I("Mojito sin alcohol", "Base de mojito y Sprite, sin pulpa.", 5500),
+            I("Colada sin alcohol", "Hielo frapé, pulpa de piña y un toque de crema.", 5500, "hurricane:#f7efc2"),
+            I("Mojito sin alcohol con pulpa", "Base de mojito, Sprite y pulpa a elección.", 6500, "high:#ff8aa8:mint")
+          ]},
+          { name: "Botellín cero", i: "bottle:#cfe3d0", items: [
+            I("Heineken o Cristal cero", "", 4000),
+            I("Corona cero", "", 4000, "bottle:#f0d56a"),
+            I("Kunstmann cero", "", 4500, "bottle:#e3b341")
+          ]},
+          { name: "Cafés y refrescos", i: "high:#ffa63a:straw", items: [
+            I("Marley expreso", "Café de grano.", 2000, "cup:#3a2418"),
+            I("Marley coffee grande", "Americano, cappuccino, mokaccino, grano vainilla, grano cortado o leche con chocolate.", 2500, "cup:#6b3a22"),
+            I("Red Bull", "Normal, sin azúcar, arándano, tropical, sandía y sabor de verano açaí.", 3100, "can:#3b6fb6"),
+            I("Limonada", "Limón, menta, jengibre, soda o agua sin gas, azúcar.", 3500, "high:#f0e56a:lime"),
+            I("Jugos naturales", "Naranja, frutilla, piña, mango o frambuesa.", 3900, "high:#ffa63a:straw")
+          ]}
+        ]},
+
+        { id: "espumantes", title: "Espumantes", groups: [
+          { i: "flute:#f3e6a8", items: [
+            I("Casillero del Diablo Brut 12°", "Ideal para aperitivos de pescados y mariscos frescos.", 25000),
+            I("Riccadonna Rosé 8°", "Fermentación natural de vinos seleccionados, con uvas blancas y rojas.", 25000, "flute:#ffb0c8"),
+            I("Riccadonna Asti 7°", "Moscato blanco sin azúcar añadida. Ligero y afrutado, para postres o aperitivo.", 25000)
+          ]}
+        ]}
+      ]
+    }
+  };
+
+  /* ---------- Miniaturas ---------- */
+  var ST = 'stroke="#d7d4cc" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"';
+  var GL = 'fill="rgba(255,255,255,0.06)"';
+  function wrapSvg(inner) { return '<svg class="thumb" viewBox="0 0 48 48" aria-hidden="true">' + inner + '</svg>'; }
+  var G = {
+    coupe: function (c, x) {
+      return wrapSvg('<polygon points="9,11 39,11 24,28" fill="' + c + '" ' + ST + '/><line x1="24" y1="28" x2="24" y2="40" ' + ST + '/><line x1="15" y1="41" x2="33" y2="41" ' + ST + '/>' +
+        (x === "salt" ? '<line x1="9" y1="9.5" x2="39" y2="9.5" stroke="#fff" stroke-width="3" stroke-dasharray="1.5 2.5"/>' : ""));
+    },
+    high: function (c, x) {
+      var g = "";
+      if (x === "mint") g = '<circle cx="19" cy="9" r="3.4" fill="#3fbf6a"/><circle cx="26" cy="7" r="3.4" fill="#2fa85a"/><circle cx="35" cy="9" r="3.6" fill="#8bd04a" stroke="#d7e8a0"/>';
+      if (x === "lime") g = '<circle cx="35" cy="9" r="4" fill="#8bd04a" stroke="#d7e8a0"/>';
+      if (x === "straw") g = '<line x1="27" y1="3" x2="23" y2="30" stroke="#f4a81d" stroke-width="2.2" stroke-linecap="round"/>';
+      if (x === "salt") g = '<line x1="14" y1="7" x2="34" y2="7" stroke="#fff" stroke-width="3" stroke-dasharray="1.5 2.5"/>';
+      return wrapSvg('<path d="M14 7 H34 L32 42 H16 Z" ' + GL + ' ' + ST + '/><path d="M15 14 H33 L31.7 41 H16.3 Z" fill="' + c + '"/>' + g);
+    },
+    rocks: function (c) {
+      return wrapSvg('<path d="M11 15 H37 L34 41 H14 Z" ' + GL + ' ' + ST + '/><path d="M12 24 H36 L34 40 H14 Z" fill="' + c + '"/><rect x="18" y="26" width="7" height="7" rx="1.5" fill="rgba(255,255,255,0.35)"/><rect x="26" y="30" width="6" height="6" rx="1.5" fill="rgba(255,255,255,0.25)"/>');
+    },
+    shot: function (c) {
+      return wrapSvg('<path d="M17 18 H31 L29.5 41 H18.5 Z" ' + GL + ' ' + ST + '/><path d="M17.7 26 H30.3 L29.5 40 H18.5 Z" fill="' + c + '"/>');
+    },
+    wine: function (c) {
+      return wrapSvg('<path d="M13 8 H35 C35 22 31 29 24 29 C17 29 13 22 13 8 Z" ' + GL + ' ' + ST + '/><path d="M14.5 15 H33.5 C33 24 30 28 24 28 C18 28 14.5 24 14.5 15 Z" fill="' + c + '"/><line x1="24" y1="29" x2="24" y2="40" ' + ST + '/><line x1="16" y1="41" x2="32" y2="41" ' + ST + '/><circle cx="35" cy="8" r="4" fill="#ff9a2e" stroke="#ffd08a"/>');
+    },
+    flute: function (c) {
+      return wrapSvg('<path d="M18 5 H30 L29 30 C29 33 19 33 19 30 Z" ' + GL + ' ' + ST + '/><path d="M18.6 12 H29.4 L29 30 C29 33 19 33 19 30 Z" fill="' + c + '"/><circle cx="23" cy="22" r="1.1" fill="#fff"/><circle cx="26" cy="17" r="1.1" fill="#fff"/><line x1="24" y1="33" x2="24" y2="40" ' + ST + '/><line x1="17" y1="41" x2="31" y2="41" ' + ST + '/>');
+    },
+    hurricane: function (c) {
+      return wrapSvg('<path d="M16 6 H32 C32 16 37 19 31 29 C28.5 34 28.5 37 31 41 H17 C19.5 37 19.5 34 17 29 C11 19 16 16 16 6 Z" fill="' + c + '" ' + ST + '/><line x1="30" y1="2" x2="26" y2="22" stroke="#f4a81d" stroke-width="2.2" stroke-linecap="round"/>');
+    },
+    bottle: function (c) {
+      return wrapSvg('<path d="M21 4 H27 V15 L31 21 V42 H17 V21 L21 15 Z" fill="' + c + '" ' + ST + '/><rect x="18" y="27" width="12" height="9" fill="rgba(255,255,255,0.85)"/>');
+    },
+    mug: function (c) {
+      return wrapSvg('<rect x="11" y="12" width="21" height="29" rx="3" ' + GL + ' ' + ST + '/><rect x="12.5" y="19" width="18" height="21" fill="' + c + '"/><rect x="11" y="9" width="21" height="9" rx="4.5" fill="#f6f1df"/><path d="M32 18 H38 Q41 18 41 22 V30 Q41 34 38 34 H32" fill="none" ' + ST + '/>');
+    },
+    can: function (c) {
+      return wrapSvg('<rect x="15" y="8" width="18" height="33" rx="3" fill="' + c + '" ' + ST + '/><rect x="15" y="20" width="18" height="8" fill="#d9262c"/><rect x="18" y="4" width="12" height="4" rx="1" fill="#cfcfcf"/>');
+    },
+    cup: function (c) {
+      return wrapSvg('<path d="M10 18 H34 V30 Q34 38 26 38 H18 Q10 38 10 30 Z" fill="' + c + '" ' + ST + '/><path d="M34 21 H38 Q42 21 42 26 Q42 31 37 31 H34" fill="none" ' + ST + '/><line x1="8" y1="42" x2="38" y2="42" ' + ST + '/><path d="M17 8 Q15 12 17 14 M23 7 Q21 11 23 13" stroke="#d7d4cc" fill="none" stroke-width="1.5" stroke-linecap="round"/>');
+    }
+  };
+  function icon(spec) {
+    var p = (spec || "high:#cccccc").split(":");
+    var f = G[p[0]] || G.high;
+    return f(p[1] || "#cccccc", p[2]);
+  }
+
+  /* ---------- Render ---------- */
+  var app = document.getElementById("app");
+  var active = "todo";
+  var lastRoute = null;
+  var thumbs = false;
+
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+
+  function logoSvg(cls) {
+    var pts = "";
+    var n = 16;
+    for (var i = 0; i < n; i++) {
+      var a = (360 / n) * i;
+      var long = i % 2 === 0;
+      var h = long ? 8 : 20;
+      pts += '<polygon points="50,' + h + ' 54.5,' + (long ? 26 : 30) + ' 45.5,' + (long ? 26 : 30) + '" fill="#f4a81d" transform="rotate(' + a + ' 50 50)"/>';
+    }
+    return '<svg class="' + cls + '" viewBox="0 0 100 100" role="img" aria-label="Goodbar"><circle cx="50" cy="50" r="49" fill="#000"/>' + pts +
+      '<circle cx="50" cy="50" r="25" fill="#f4a81d"/><circle cx="50" cy="50" r="21" fill="#0a0a0a" stroke="#fff" stroke-width="2.2"/>' +
+      '<text x="50" y="59.5" text-anchor="middle" font-family="Archivo Black, Arial Black, sans-serif" font-size="27" fill="#fff">G</text></svg>';
+  }
+
+  function sunburst() {
+    var tri = "";
+    var n = 24;
+    for (var i = 0; i < n; i++) {
+      var a = (360 / n) * i;
+      tri += '<polygon points="480,12 502,100 458,100" fill="#f4a81d" transform="rotate(' + a + ' 480 480)"/>';
+    }
+    return '<svg class="sun" viewBox="0 0 960 960" aria-hidden="true">' + tri + '<circle cx="480" cy="480" r="340" fill="none" stroke="#f4a81d" stroke-width="6"/></svg>';
+  }
+
+  function home() {
+    return '<main class="home">' + sunburst() +
+      '<div class="wrap">' +
+        '<header class="hero">' +
+          logoSvg("logo") +
+          '<h1 class="cover"><span>A comer</span><span class="out">y a beber?</span></h1>' +
+          '<div class="info">' +
+            '<div class="who">' + logoSvg("") + '<div><b>GoodBar</b><a href="https://www.instagram.com/good.bar/" target="_blank" rel="noopener">@good.bar</a></div></div>' +
+            '<p class="row">Avenida Chacabuco 1266, Concepción<small>Frente Plaza Perú</small></p>' +
+            '<p class="row">Lunes a jueves 14:00 a 01:15 h<small>Viernes y sábado 14:00 a 02:15 h</small></p>' +
+          '</div>' +
+        '</header>' +
+        '<nav class="choices" aria-label="Carta">' +
+          '<a class="choice comida" href="#comida"><b>Comida</b><span>Apetizzer, hamburguesas, papas horneadas y pizzas.</span><i aria-hidden="true">→</i></a>' +
+          '<a class="choice bebestibles" href="#bebestibles"><b>Bebestibles</b><span>Cervezas, mojitos, cocteles, destilados y más.</span><i aria-hidden="true">→</i></a>' +
+        '</nav>' +
+        '<p class="foot">Valores en pesos chilenos.</p>' +
+      '</div></main>';
+  }
+
+  function itemHtml(it, gi) {
+    var hasPrice = typeof it.p === "number";
+    var priceHtml = hasPrice ? '<span class="price">' + money(it.p) + '</span>' : '<span class="price na">Consultar</span>';
+    if (thumbs) {
+      return '<div class="item has-thumb">' + icon(it.i || gi) + '<div class="info-col"><span class="name">' + esc(it.n) + '</span>' + (it.d ? '<span class="desc">' + esc(it.d) + '</span>' : "") + '</div>' + priceHtml + '</div>';
+    }
+    return '<div class="item"><span class="name">' + esc(it.n) + '</span>' + priceHtml + (it.d ? '<span class="desc">' + esc(it.d) + '</span>' : "") + '</div>';
+  }
+
+  function groupHtml(g) {
+    var head = (g.name ? '<h3>' + esc(g.name) + '</h3>' : "") + (g.note ? '<p class="gnote">' + esc(g.note) + '</p>' : "");
+    return '<div class="group">' + head + '<div class="items">' + g.items.map(function (it) { return itemHtml(it, g.i); }).join("") + '</div></div>';
+  }
+
+  function catHtml(c) {
+    return '<section class="cat" id="cat-' + c.id + '"><h2>' + esc(c.title) + '</h2>' +
+      (c.note ? '<p class="cat-note">' + esc(c.note) + '</p>' : "") +
+      c.groups.map(groupHtml).join("") + '</section>';
+  }
+
+  function view(key) {
+    var v = DATA[key];
+    thumbs = key === "bebestibles";
+    var chips = '<button class="chip" type="button" data-cat="todo" aria-pressed="' + (active === "todo") + '">Todo</button>' +
+      v.cats.map(function (c) { return '<button class="chip" type="button" data-cat="' + c.id + '" aria-pressed="' + (active === c.id) + '">' + esc(c.title) + '</button>'; }).join("");
+    var shown = v.cats.filter(function (c) { return active === "todo" || active === c.id; });
+    return '<div>' +
+      '<header class="bar"><div class="wrap">' +
+        '<div class="bar-top"><a class="back" href="#">← Inicio</a><span class="view-title">' + esc(v.title) + '</span></div>' +
+        '<div class="chips" role="group" aria-label="Categorías">' + chips + '</div>' +
+      '</div></header>' +
+      '<main class="wrap menu">' + shown.map(catHtml).join("") + '</main>' +
+      '<p class="wrap mfoot">GoodBar · Avenida Chacabuco 1266, Concepción · Valores en pesos chilenos.</p></div>';
+  }
+
+  function render() {
+    var route = location.hash.replace("#", "");
+    if (route !== lastRoute) { active = "todo"; lastRoute = route; window.scrollTo(0, 0); }
+    app.innerHTML = DATA[route] ? view(route) : home();
+  }
+
+  app.addEventListener("click", function (e) {
+    var b = e.target.closest ? e.target.closest(".chip") : null;
+    if (!b) return;
+    active = b.getAttribute("data-cat");
+    render();
+    window.scrollTo(0, 0);
+  });
+  window.addEventListener("hashchange", render);
+  render();
+})();
+</script>
+
+</body></html>
